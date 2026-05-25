@@ -1,0 +1,6 @@
+@PRN232.LAB1.API_HostAddress = http://localhost:5273
+
+GET {{PRN232.LAB1.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
