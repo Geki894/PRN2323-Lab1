@@ -10,47 +10,47 @@ using System.Threading.Tasks;
 
 namespace PRN232.LAB1.Services
 {
-    public class EnrollmentService : IEnrollmentService
+    public class CourseService : ICourseService
     {
-        private readonly IGenericRepository<Enrollment_Tam> _repository;
+        private readonly IGenericRepository<Course_Tam> _repository;
 
-        public EnrollmentService(IGenericRepository<Enrollment_Tam> repository)
+        public CourseService(IGenericRepository<Course_Tam> repository)
         {
             _repository = repository;
         }
 
-        public async Task<PagedResult<dynamic>> GetEnrollmentsAsync(string? search, string? sort, int page, int size, string? fields, string? expand)
+        public async Task<PagedResult<dynamic>> GetCoursesAsync(string? search, string? sort, int page, int size, string? fields, string? expand)
         {
             var query = _repository.GetQueryable();
-            var searchFields = new[] { "Status" };
+            var searchFields = new[] { "Name" };
 
             return await query.ApplyDynamicQueryAsync(search, searchFields, sort, page, size, fields, expand);
         }
 
-        public async Task<PagedResult<dynamic>> GetEnrollmentsByCourseIdAsync(int courseId, string? search, string? sort, int page, int size, string? fields, string? expand)
+        public async Task<PagedResult<dynamic>> GetCoursesBySemesterIdAsync(int semesterId, string? search, string? sort, int page, int size, string? fields, string? expand)
         {
-            var query = _repository.GetQueryable().Where(e => e.CourseId == courseId);
-            var searchFields = new[] { "Status" };
+            var query = _repository.GetQueryable().Where(c => c.SemesterId == semesterId);
+            var searchFields = new[] { "Name" };
 
             return await query.ApplyDynamicQueryAsync(search, searchFields, sort, page, size, fields, expand);
         }
 
-        public async Task<EnrollmentResponseModel?> GetEnrollmentByIdAsync(int id)
+        public async Task<CourseResponseModel?> GetCourseByIdAsync(int id)
         {
             var entity = await _repository.GetByIdAsync(id);
             if (entity == null) return null;
-            return entity.Adapt<EnrollmentResponseModel>();
+            return entity.Adapt<CourseResponseModel>();
         }
 
-        public async Task<EnrollmentResponseModel> CreateEnrollmentAsync(EnrollmentRequestModel model)
+        public async Task<CourseResponseModel> CreateCourseAsync(CourseRequestModel model)
         {
-            var entity = model.Adapt<Enrollment_Tam>();
+            var entity = model.Adapt<Course_Tam>();
             await _repository.AddAsync(entity);
             await _repository.SaveChangesAsync();
-            return entity.Adapt<EnrollmentResponseModel>();
+            return entity.Adapt<CourseResponseModel>();
         }
 
-        public async Task<bool> UpdateEnrollmentAsync(int id, EnrollmentRequestModel model)
+        public async Task<bool> UpdateCourseAsync(int id, CourseRequestModel model)
         {
             var entity = await _repository.GetByIdAsync(id);
             if (entity == null) return false;
@@ -61,7 +61,7 @@ namespace PRN232.LAB1.Services
             return true;
         }
 
-        public async Task<bool> DeleteEnrollmentAsync(int id)
+        public async Task<bool> DeleteCourseAsync(int id)
         {
             var entity = await _repository.GetByIdAsync(id);
             if (entity == null) return false;
